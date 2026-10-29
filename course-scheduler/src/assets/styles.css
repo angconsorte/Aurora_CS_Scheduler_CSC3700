@@ -1,0 +1,68 @@
+/* ---- Page ---- */
+.home-page {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.home-page_title {
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+/* ---- Card layout ---- */
+.course-card {
+    border-width: 2px;
+}
+
+.course-card_body {
+    padding: 1rem;
+}
+
+.course-card_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.course-card_title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.course-card_credits {
+    font-size: 1rem;
+    color: #6c757d;
+    margin-bottom: 0.75rem;
+}
+
+.course-card_description {
+    margin-bottom: 0.5rem;
+}
+
+.course-card_prereqs {
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+}
+
+/* ---- Card states ---- */
+.course-card--completed {
+    border-color: #198754;
+    background-color: #eaf6ef;
+}
+
+.course-card--available {
+    border-color: #0d6efd;
+}
+
+.course-card--locked {
+    border-color: #adb5bd;
+    background-color: #f1f3f5;
+    opacity: 0.6;
+}
+
+/* ---- Badges ---- */
+.course-card_badge--completed { background-color: #198754; }
+.course-card_badge--available { background-color: #0d6efd; }
+.course-card_badge--locked    { background-color: #6c757d; }
