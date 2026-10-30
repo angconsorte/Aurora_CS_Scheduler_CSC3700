@@ -7,7 +7,6 @@ export default function useFetch(path) {
 
     useEffect(() => {
         const controller = new AbortController()
-        setIsPending(true)
 
         fetch(`${import.meta.env.VITE_API_BASE_URL}${path}`, { signal: controller.signal })
             .then(res => {
