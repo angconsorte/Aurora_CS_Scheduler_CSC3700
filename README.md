@@ -17,10 +17,10 @@ cd course-scheduler
 npm install
 
 # 2. Create the .env file (it is not committed)
-echo "VITE_API_BASE_URL=http://localhost:3333" > .env
+echo "VITE_API_BASE_URL=http://localhost:3000" > .env
 
 # 3. Start JSON Server (leave this terminal running)
-npx json-server --watch db/db.json --port 3333
+npx json-server --watch db/db.json --port 3000
 
 # 4. In a second terminal, start the React app
 npm run dev

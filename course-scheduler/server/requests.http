@@ -1,0 +1,81 @@
+@baseUrl = http://localhost:3000/api
+
+### ---- COURSES ----
+
+### GET all courses (200)
+GET {{baseUrl}}/courses
+
+### GET one course (200)
+GET {{baseUrl}}/courses/2
+
+### GET a course that does not exist (404)
+GET {{baseUrl}}/courses/999
+
+### POST a new course (201). Gets the next id, 11 on a fresh seed.
+POST {{baseUrl}}/courses
+Content-Type: application/json
+
+{ "number": "CSC4600", "title": "Cloud Computing", "credits": 3,
+  "description": "Test course", "prerequisites": [5, 9] }
+
+### POST with a missing title (400)
+POST {{baseUrl}}/courses
+Content-Type: application/json
+
+{ "number": "CSC4700", "credits": 3, "prerequisites": [] }
+
+### PUT: CSC3700 now requires CSC2200 and CSC3250 (200)
+PUT {{baseUrl}}/courses/7
+Content-Type: application/json
+
+{ "number": "CSC3700", "title": "Advanced Web Application Development", "credits": 3,
+  "description": "React, Node/Express, MySQL, JWT authentication.", "prerequisites": [3, 5] }
+
+### PUT: put CSC3700 back to the seed prerequisites (200)
+PUT {{baseUrl}}/courses/7
+Content-Type: application/json
+
+{ "number": "CSC3700", "title": "Advanced Web Application Development", "credits": 3,
+  "description": "React, Node/Express, MySQL, JWT authentication. Full-stack web development.",
+  "prerequisites": [3] }
+
+### PUT a course that does not exist (404)
+PUT {{baseUrl}}/courses/999
+Content-Type: application/json
+
+{ "number": "CSC9999", "title": "Nope", "credits": 3, "prerequisites": [] }
+
+### PUT with a missing number (400)
+PUT {{baseUrl}}/courses/7
+Content-Type: application/json
+
+{ "title": "No number", "credits": 3, "prerequisites": [] }
+
+### DELETE the test course (200). Change 11 if POST gave a different id.
+DELETE {{baseUrl}}/courses/11
+
+### DELETE a course that does not exist (404)
+DELETE {{baseUrl}}/courses/999
+
+### ---- COMPLETIONS ----
+
+### GET completions (200) -> [1, 3] on a fresh seed
+GET {{baseUrl}}/completions
+
+### PUT a valid list (200) -> [1, 2, 3]
+PUT {{baseUrl}}/completions
+Content-Type: application/json
+
+[1, 3, 2]
+
+### PUT an invalid list: CSC4990 (10) without CSC3510 (6) and CSC3700 (7) (400, nothing saved)
+PUT {{baseUrl}}/completions
+Content-Type: application/json
+
+[1, 10]
+
+### PUT the seed list back (200)
+PUT {{baseUrl}}/completions
+Content-Type: application/json
+
+[1, 3]

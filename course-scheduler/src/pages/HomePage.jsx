@@ -1,21 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import useFetch from '../hooks/useFetch'
 import CourseList from '../components/CourseList'
 import ProgressSummary from '../components/ProgressSummary'
 
-const STORAGE_KEY = 'completedCourses'
-
-const loadCompleted = () => {
-    try {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY))
-        return Array.isArray(saved) ? saved.map(Number) : []
-    } catch {
-        return []
-    }
-}
 
 export default function HomePage() {
-    const { data, isPending, error } = useFetch('/courses')
+    const { data, isPending: coursesPending, error: coursesError } = useFetch('/api/courses')
+    const { data: savedCompletions, isPending: completionsPending, error: completionsError } =
+        useFetch('/api/completions')
+    const isPending = coursesPending || completionsPending
+    const error = coursesError || completionsError
+
     const courses = data
         ? data.map(c => ({
             ...c,
@@ -23,9 +18,14 @@ export default function HomePage() {
             prerequisites: c.prerequisites.map(Number),
         }))
         : null
-    const [completed, setCompleted] = useState(loadCompleted)
+    const [completed, setCompleted] = useState([])
     const [filter, setFilter] = useState('all')
-    const [saved, setSaved] = useState(false)
+    const [message, setMessage] = useState(null) // { ok: true/false, text: '...' }
+
+    // When the fetch finishes, copy the server's list into editable state
+    useEffect(() => {
+        if (Array.isArray(savedCompletions)) setCompleted(savedCompletions.map(Number))
+    }, [savedCompletions])
 
     const isAvailable = (course, done) =>
         course.prerequisites.every(id => done.includes(id))
@@ -57,9 +57,19 @@ export default function HomePage() {
         }
     }
 
-    const saveProgress = () => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(completed))
-        setSaved(true)
+    const saveProgress = async () => {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/completions`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(completed),
+            })
+            const body = await res.json()
+            if (!res.ok) throw new Error(body.error || 'Could not save progress')
+            setMessage({ ok: true, text: 'Saved!' })
+        } catch (err) {
+            setMessage({ ok: false, text: err.message })
+        }
     }
 
     const filters = [
@@ -103,7 +113,11 @@ export default function HomePage() {
                             ))}
                         </div>
                         <div className="home-page_save">
-                            {saved && <span className="text-success">Saved!</span>}
+                            {message && (
+                                <span className={message.ok ? 'text-success' : 'text-danger'}>
+                                    {message.text}
+                                </span>
+                            )}
                             <button type="button" className="btn btn-success" onClick={saveProgress}>
                                 Save
                             </button>
