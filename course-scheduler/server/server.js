@@ -15,6 +15,8 @@ app.use('/api', coursesRouter)
 app.use('/api', completionsRouter)
 
 // Malformed JSON bodies -> JSON 400 instead of an HTML error page
+// Express only treats a 4-argument function as error middleware, so `next` must stay
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
     if (err.type === 'entity.parse.failed') {
         return res.status(400).json({ error: 'Invalid JSON body' })

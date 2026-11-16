@@ -23,7 +23,9 @@ export default function HomePage() {
     const [message, setMessage] = useState(null) // { ok: true/false, text: '...' }
 
     // When the fetch finishes, copy the server's list into editable state
+    // (M2 spec Section 7.4 pattern: one copy when the fetch resolves)
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (Array.isArray(savedCompletions)) setCompleted(savedCompletions.map(Number))
     }, [savedCompletions])
 
@@ -37,7 +39,7 @@ export default function HomePage() {
 
     const updateCompleted = next => {
         setCompleted(next)
-        setSaved(false)
+        setMessage(null)
     }
 
     const toggleCourse = course => {

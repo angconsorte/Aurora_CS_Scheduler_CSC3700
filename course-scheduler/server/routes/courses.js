@@ -6,6 +6,9 @@ const validateCourse = require('../util/validateCourse')
 
 const router = express.Router()
 
+// A non-numeric :id (e.g. /courses/abc) can't match any course -> 404
+const isValidId = id => Number.isInteger(id) && id > 0
+
 // Duplicate course number -> 400, anything else -> 500
 const sendDbError = (res, err) => {
     if (err.code === 'ER_DUP_ENTRY') {
@@ -41,7 +44,9 @@ router.get('/courses', async (req, res) => {
 
 router.get('/courses/:id', async (req, res) => {
     try {
-        const course = await getCoursesWithPrereqs(pool, Number(req.params.id))
+        const id = Number(req.params.id)
+        if (!isValidId(id)) return res.status(404).json({ error: 'Course not found' })
+        const course = await getCoursesWithPrereqs(pool, id)
         if (!course) return res.status(404).json({ error: 'Course not found' })
         res.json(course)
     } catch (err) {
@@ -75,6 +80,7 @@ router.post('/courses', async (req, res) => {
 
 router.put('/courses/:id', async (req, res) => {
     const id = Number(req.params.id)
+    if (!isValidId(id)) return res.status(404).json({ error: 'Course not found' })
 
     const problem = validateCourse(req.body)
     if (problem) return res.status(400).json({ error: problem })
@@ -107,6 +113,7 @@ router.put('/courses/:id', async (req, res) => {
 router.delete('/courses/:id', async (req, res) => {
     try {
         const id = Number(req.params.id)
+        if (!isValidId(id)) return res.status(404).json({ error: 'Course not found' })
         const course = await getCoursesWithPrereqs(pool, id)
         if (!course) return res.status(404).json({ error: 'Course not found' })
 

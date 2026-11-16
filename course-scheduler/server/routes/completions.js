@@ -5,7 +5,8 @@ const { getCoursesWithPrereqs, replaceCompletions } = require('../util/courseDat
 
 const router = express.Router()
 
-const USER_ID = 1 // M3: replaced by the logged-in user's id
+// M3: replaced by the logged-in user's id
+const USER_ID = 1
 
 // courses: array in the Section 5 shape, completed: array of ids
 const isValidCompletionSet = (courses, completed) => {

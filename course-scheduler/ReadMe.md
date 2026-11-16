@@ -2,6 +2,10 @@
 
 React + Vite front end, Node/Express API, MySQL database.
 
+**Authors:** Angelo Consorte and Jocelyn Sahagun
+
+See the main [README](../README.md) at the repository root for full run instructions, the API reference, and tests.
+
 ## 1. Database
 1. Run `server/sql/schema.sql` against your team database.
 2. Run `server/sql/seed.sql` after it.

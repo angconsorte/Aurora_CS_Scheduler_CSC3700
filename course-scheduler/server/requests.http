@@ -52,7 +52,7 @@ Content-Type: application/json
 { "title": "No number", "credits": 3, "prerequisites": [] }
 
 ### DELETE the test course (200). Change 11 if POST gave a different id.
-DELETE {{baseUrl}}/courses/12
+DELETE {{baseUrl}}/courses/11
 
 ### DELETE a course that does not exist (404)
 DELETE {{baseUrl}}/courses/999
